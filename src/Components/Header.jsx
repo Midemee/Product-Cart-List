@@ -1,15 +1,18 @@
-import {React, useState} from 'react'
+import {React, useState, useContext} from 'react'
 import {Link} from "react-router-dom"
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoCloseSharp } from "react-icons/io5";
 import {motion, AnimatePresence} from "framer-motion"
+import { AuthContext } from '../Context/AuthContext';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] =useState(false)
+  const {user, logout} = useContext(AuthContext)
 
   const toggleMenu =()=>{
     setIsMenuOpen(!isMenuOpen)
   }
+
   return (
     <header className="bg-rose-100 py-10 w-full">
         <nav className="container mx-auto flex justify-between items-center px-4">
@@ -17,12 +20,28 @@ export default function Header() {
             <span className="font-bold text-3xl">Desserts</span>
             </Link>
 
-             <button onClick={toggleMenu} className="md:hidden">
+            <div className='md:hidden'>
+              {user ? (<>
+              <div className='flex gap-3'>
+                <img className='w-10 h-10 rounded-full border-red-900' src={user?.image || "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_incoming&w=740&q=80"} />
+                <button onClick={logout} className='font-medium bg-red-900 text-white px-3 py-2 rounded-md'>Log out</button>
+              </div>
+              </>) : (
+              <button onClick={toggleMenu} className="md:hidden">
               {isMenuOpen ? <IoCloseSharp size={30} /> : <GiHamburgerMenu size={30} /> }
              </button>
+              )}
+            </div>
 
 {/* for large screen */}
-            <div className="hidden md:flex gap-5">
+            <div className='hidden md:flex'>
+              {user ? (<>
+              <div className='flex gap-3'>
+                <img className='w-10 h-10 rounded-full border-red-900' src={user?.image || "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?semt=ais_incoming&w=740&q=80"} />
+                <button onClick={logout} className='font-medium bg-red-900 text-white px-3 py-2 rounded-md'>Log out</button>
+              </div>
+              </>) :
+              <div className="flex gap-5">
               {
               [{
                 content:"Sign In",
@@ -43,6 +62,7 @@ export default function Header() {
                 </motion.div>
               })
               }
+            </div>}
             </div>
 
 {/* mobile menu tab */}
@@ -62,8 +82,8 @@ export default function Header() {
       </div>
       <nav className="flex flex-col gap-4">
         {[
-          { content: "Sign In", path: "/signin" },
-          { content: "Sign Up", path: "/signup" }
+          { content: "Sign In", path: "/signinpage" },
+          { content: "Sign Up", path: "/signuppage" }
         ].map((link, index) => (
           <motion.div
             key={link.content}
